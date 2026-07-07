@@ -56,6 +56,12 @@ export interface BindEmailPayload {
   code: string
 }
 
+export interface SmsLoginPayload {
+  phone: string
+  code: string
+  turnstile?: string
+}
+
 // ============================================================================
 // API Responses
 // ============================================================================
@@ -128,6 +134,7 @@ export interface SystemStatus {
     register_enabled?: boolean
     password_login_enabled?: boolean
     password_register_enabled?: boolean
+    sms_login_enabled?: boolean
     custom_oauth_providers?: CustomOAuthProviderInfo[]
     [key: string]: unknown
   }
@@ -171,6 +178,7 @@ export interface SystemStatus {
   register_enabled?: boolean
   password_login_enabled?: boolean
   password_register_enabled?: boolean
+  sms_login_enabled?: boolean
   custom_oauth_providers?: CustomOAuthProviderInfo[]
   [key: string]: unknown
 }

@@ -95,6 +95,8 @@ func loginMethodFromContext(c *gin.Context) string {
 	switch c.FullPath() {
 	case "/api/user/login":
 		return "password"
+	case "/api/user/sms-login":
+		return "sms"
 	case "/api/user/login/2fa":
 		return "2fa"
 	case "/api/user/passkey/login/finish":

@@ -50,6 +50,8 @@ type User struct {
 	LinuxDOId        string         `json:"linux_do_id" gorm:"column:linux_do_id;index"`
 	Setting          string         `json:"setting" gorm:"type:text;column:setting"`
 	Remark           string         `json:"remark,omitempty" gorm:"type:varchar(255)" validate:"max=255"`
+	Phone            string         `json:"phone" gorm:"type:varchar(32);column:phone;index"`
+	CreatorId        int            `json:"creator_id" gorm:"type:int;column:creator_id;index"`
 	StripeCustomer   string         `json:"stripe_customer" gorm:"type:varchar(64);column:stripe_customer;index"`
 	CreatedAt        int64          `json:"created_at" gorm:"autoCreateTime;column:created_at"`
 	LastLoginAt      int64          `json:"last_login_at" gorm:"default:0;column:last_login_at"`

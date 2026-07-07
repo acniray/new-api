@@ -30,6 +30,17 @@ export const loginFormSchema = z.object({
     .min(8, 'Password must be at least 8 characters long'),
 })
 
+export const smsLoginFormSchema = z.object({
+  phone: z
+    .string()
+    .min(1, 'Please enter your phone number')
+    .regex(/^\d{5,15}$/, 'Please enter a valid phone number'),
+  code: z
+    .string()
+    .min(1, 'Please enter verification code')
+    .regex(/^\d{6}$/, 'Verification code must be 6 digits'),
+})
+
 export const registerFormSchema = z
   .object({
     username: z.string().min(1, 'Please enter your username'),
@@ -73,6 +84,7 @@ export const OTP_REGEX = /^\d{6}$/
 
 export const EMAIL_VERIFICATION_COUNTDOWN = 30 // seconds
 export const PASSWORD_RESET_COUNTDOWN = 30 // seconds
+export const SMS_CODE_COUNTDOWN = 60 // seconds
 
 // ============================================================================
 // OAuth Constants

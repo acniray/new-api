@@ -23,6 +23,7 @@ import type {
   Login2FAResponse,
   TwoFAPayload,
   RegisterPayload,
+  SmsLoginPayload,
   ApiResponse,
 } from './types'
 
@@ -43,6 +44,31 @@ export async function login(payload: LoginPayload) {
       username: payload.username,
       password: payload.password,
     }
+  )
+  return res.data
+}
+
+// SMS login with phone and verification code
+export async function smsLogin(payload: SmsLoginPayload) {
+  const turnstile = payload.turnstile ?? ''
+  const res = await api.post<LoginResponse>(
+    `/api/user/sms-login?turnstile=${turnstile}`,
+    {
+      phone: payload.phone,
+      code: payload.code,
+    }
+  )
+  return res.data
+}
+
+// Send SMS verification code
+export async function sendSmsCode(
+  phone: string,
+  turnstile?: string
+): Promise<ApiResponse> {
+  const res = await api.post<ApiResponse>(
+    `/api/send-sms-code?turnstile=${turnstile ?? ''}`,
+    { phone }
   )
   return res.data
 }

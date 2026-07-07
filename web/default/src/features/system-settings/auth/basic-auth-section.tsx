@@ -44,6 +44,7 @@ import { useUpdateOption } from '../hooks/use-update-option'
 
 const basicAuthSchema = z.object({
   PasswordLoginEnabled: z.boolean(),
+  SmsLoginEnabled: z.boolean(),
   PasswordRegisterEnabled: z.boolean(),
   EmailVerificationEnabled: z.boolean(),
   RegisterEnabled: z.boolean(),
@@ -121,6 +122,27 @@ export function BasicAuthSection({ defaultValues }: BasicAuthSectionProps) {
                   <FormLabel>{t('Password Login')}</FormLabel>
                   <FormDescription>
                     {t('Allow users to log in with password')}
+                  </FormDescription>
+                </SettingsSwitchContent>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </SettingsSwitchItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='SmsLoginEnabled'
+            render={({ field }) => (
+              <SettingsSwitchItem>
+                <SettingsSwitchContent>
+                  <FormLabel>{t('SMS Login')}</FormLabel>
+                  <FormDescription>
+                    {t('Allow users to log in with SMS verification code')}
                   </FormDescription>
                 </SettingsSwitchContent>
                 <FormControl>

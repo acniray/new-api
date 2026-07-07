@@ -38,6 +38,7 @@ func InitOptionMap() {
 	common.OptionMap["ImageDownloadPermission"] = strconv.Itoa(common.ImageDownloadPermission)
 	common.OptionMap["PasswordLoginEnabled"] = strconv.FormatBool(common.PasswordLoginEnabled)
 	common.OptionMap["PasswordRegisterEnabled"] = strconv.FormatBool(common.PasswordRegisterEnabled)
+	common.OptionMap["SmsLoginEnabled"] = strconv.FormatBool(common.SmsLoginEnabled)
 	common.OptionMap["EmailVerificationEnabled"] = strconv.FormatBool(common.EmailVerificationEnabled)
 	common.OptionMap["GitHubOAuthEnabled"] = strconv.FormatBool(common.GitHubOAuthEnabled)
 	common.OptionMap["LinuxDOOAuthEnabled"] = strconv.FormatBool(common.LinuxDOOAuthEnabled)
@@ -173,6 +174,10 @@ func InitOptionMap() {
 	common.OptionMap["AutomaticDisableStatusCodes"] = operation_setting.AutomaticDisableStatusCodesToString()
 	common.OptionMap["AutomaticRetryStatusCodes"] = operation_setting.AutomaticRetryStatusCodesToString()
 	common.OptionMap["ExposeRatioEnabled"] = strconv.FormatBool(ratio_setting.IsExposeRatioEnabled())
+	common.OptionMap["SmsApiUrl"] = ""
+	common.OptionMap["SmsEnterpriseNo"] = ""
+	common.OptionMap["SmsAccount"] = ""
+	common.OptionMap["SmsSignKey"] = ""
 
 	// 自动添加所有注册的模型配置
 	modelConfigs := config.GlobalConfig.ExportAllConfigs()
@@ -282,6 +287,8 @@ func updateOptionMap(key string, value string) (err error) {
 			common.PasswordRegisterEnabled = boolValue
 		case "PasswordLoginEnabled":
 			common.PasswordLoginEnabled = boolValue
+		case "SmsLoginEnabled":
+			common.SmsLoginEnabled = boolValue
 		case "EmailVerificationEnabled":
 			common.EmailVerificationEnabled = boolValue
 		case "GitHubOAuthEnabled":
@@ -566,6 +573,14 @@ func updateOptionMap(key string, value string) (err error) {
 		// WaffoPayMethods is read directly from OptionMap via setting.GetWaffoPayMethods().
 		// The value is already stored in OptionMap at the top of this function (line: common.OptionMap[key] = value).
 		// No additional in-memory variable to update.
+	case "SmsApiUrl":
+		setting.SmsApiUrl = value
+	case "SmsEnterpriseNo":
+		setting.SmsEnterpriseNo = value
+	case "SmsAccount":
+		setting.SmsAccount = value
+	case "SmsSignKey":
+		setting.SmsSignKey = value
 	}
 	return err
 }

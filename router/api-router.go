@@ -40,6 +40,12 @@ func SetApiRouter(router *gin.Engine) {
 		}
 		apiRouter.GET("/rankings", middleware.HeaderNavModuleAuth("rankings"), controller.GetRankings)
 		apiRouter.GET("/verification", middleware.EmailVerificationRateLimit(), middleware.TurnstileCheck(), controller.SendEmailVerification)
+		apiRouter.POST("/send-sms-code",
+			middleware.SmsRateLimit(),
+			anonymousRequestBodyLimit,
+			middleware.TurnstileCheck(),
+			controller.SendSmsCode,
+		)
 		apiRouter.GET("/reset_password", middleware.CriticalRateLimit(), middleware.TurnstileCheck(), controller.SendPasswordResetEmail)
 		apiRouter.POST("/user/reset", middleware.CriticalRateLimit(), anonymousRequestBodyLimit, controller.ResetPassword)
 		// OAuth routes - specific routes must come before :provider wildcard
@@ -68,6 +74,12 @@ func SetApiRouter(router *gin.Engine) {
 		{
 			userRoute.POST("/register", middleware.CriticalRateLimit(), anonymousRequestBodyLimit, middleware.TurnstileCheck(), controller.Register)
 			userRoute.POST("/login", middleware.CriticalRateLimit(), anonymousRequestBodyLimit, middleware.TurnstileCheck(), controller.Login)
+			userRoute.POST("/sms-login",
+				middleware.CriticalRateLimit(),
+				anonymousRequestBodyLimit,
+				middleware.TurnstileCheck(),
+				controller.SmsLogin,
+			)
 			userRoute.POST("/login/2fa", middleware.CriticalRateLimit(), anonymousRequestBodyLimit, controller.Verify2FALogin)
 			userRoute.POST("/passkey/login/begin", middleware.CriticalRateLimit(), anonymousRequestBodyLimit, controller.PasskeyLoginBegin)
 			userRoute.POST("/passkey/login/finish", middleware.CriticalRateLimit(), anonymousRequestBodyLimit, controller.PasskeyLoginFinish)
@@ -127,6 +139,7 @@ func SetApiRouter(router *gin.Engine) {
 			adminRoute := userRoute.Group("/")
 			adminRoute.Use(middleware.AdminAuth())
 			{
+				adminRoute.POST("/quick-redeem", controller.QuickRedeem)
 				adminRoute.GET("/", controller.GetAllUsers)
 				adminRoute.GET("/topup", controller.GetAllTopUps)
 				adminRoute.POST("/topup/complete", controller.AdminCompleteTopUp)
