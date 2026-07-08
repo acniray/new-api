@@ -1,6 +1,7 @@
 package common
 
 import (
+	"crypto/rand"
 	"strings"
 	"sync"
 	"time"
@@ -31,6 +32,19 @@ func GenerateVerificationCode(length int) string {
 		return code
 	}
 	return code[:length]
+}
+
+// GenerateNumericCode 生成纯数字验证码（用于短信等场景）
+func GenerateNumericCode(length int) string {
+	if length <= 0 {
+		length = 6
+	}
+	buf := make([]byte, length)
+	_, _ = rand.Read(buf)
+	for i := range buf {
+		buf[i] = '0' + buf[i]%10
+	}
+	return string(buf)
 }
 
 func RegisterVerificationCodeWithKey(key string, code string, purpose string) {

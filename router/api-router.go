@@ -46,6 +46,8 @@ func SetApiRouter(router *gin.Engine) {
 			middleware.TurnstileCheck(),
 			controller.SendSmsCode,
 		)
+		apiRouter.GET("/sms/balance", middleware.AdminAuth(), controller.QuerySmsBalance)
+		apiRouter.GET("/sms/report", middleware.AdminAuth(), controller.QuerySmsReport)
 		apiRouter.GET("/reset_password", middleware.CriticalRateLimit(), middleware.TurnstileCheck(), controller.SendPasswordResetEmail)
 		apiRouter.POST("/user/reset", middleware.CriticalRateLimit(), anonymousRequestBodyLimit, controller.ResetPassword)
 		// OAuth routes - specific routes must come before :provider wildcard

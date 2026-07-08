@@ -35,6 +35,17 @@ func SendSmsCode(c *gin.Context) {
 		return
 	}
 
+	// 检查用户是否存在
+	var user model.User
+	if err := model.DB.Where("username = ?", phone).First(&user).Error; err != nil {
+		common.ApiErrorI18n(c, i18n.MsgUserNotExists)
+		return
+	}
+	if user.Status != common.UserStatusEnabled {
+		common.ApiErrorI18n(c, i18n.MsgAuthUserBanned)
+		return
+	}
+
 	// 加载 SMS 配置
 	setting.LoadSmsSetting()
 	if setting.SmsApiUrl == "" {
@@ -64,7 +75,7 @@ func SendSmsCode(c *gin.Context) {
 	}
 
 	// 生成验证码
-	code := common.GenerateVerificationCode(6)
+	code := common.GenerateNumericCode(6)
 	common.RegisterVerificationCodeWithKey(phone, code, common.SmsLoginPurpose)
 
 	// 发送短信
@@ -90,6 +101,44 @@ func SendSmsCode(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "",
+	})
+}
+
+// ========== QuerySmsBalance ==========
+
+// QuerySmsBalance 查询短信余额（余额、已发送条数、消费金额）
+func QuerySmsBalance(c *gin.Context) {
+	result, err := service.QuerySmsBalance()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"data":    result,
+	})
+}
+
+// ========== QuerySmsReport ==========
+
+// QuerySmsReport 查询短信发送状态报告
+func QuerySmsReport(c *gin.Context) {
+	items, err := service.QuerySmsReport()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"data":    items,
 	})
 }
 
